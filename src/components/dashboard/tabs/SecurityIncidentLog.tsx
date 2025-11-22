@@ -1,7 +1,28 @@
+import { useState } from "react";
 import { AlertTriangle, CheckCircle, Lock, FileText, Eye } from "lucide-react";
 import networkGlobe from "@/assets/network-globe.png";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const SecurityIncidentLog = () => {
+  const { toast } = useToast();
+  const [resolvedIds, setResolvedIds] = useState<string[]>([]);
+
+  const handleInvestigate = (idx: number, type: string) => {
+    toast({
+      title: "Opening Investigation",
+      description: `Investigating ${type} incident...`,
+    });
+  };
+
+  const handleResolve = (idx: number) => {
+    setResolvedIds([...resolvedIds, idx.toString()]);
+    toast({
+      title: "Incident Resolved",
+      description: `Security incident marked as resolved.`,
+    });
+  };
+
   const incidents = [
     { type: "critical", icon: "🔒", text: "Unautorized fiees scan", location: "11. Dubai Node OB", time: "13:15" },
     { type: "warning", icon: "👁️", text: "Sensor AEI-07 recalibratiea", time: "p1:02", detail: "↓-1.51m" },
@@ -83,6 +104,24 @@ const SecurityIncidentLog = () => {
                     )}
                     <div className="text-xs text-muted-foreground mt-1">{incident.time}</div>
                   </div>
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <Button 
+                    variant="outline" 
+                    className="text-xs border-primary text-primary hover:bg-primary/10"
+                    onClick={() => handleInvestigate(idx, incident.text)}
+                    disabled={resolvedIds.includes(idx.toString())}
+                  >
+                    Investigate
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="text-xs border-muted-foreground text-muted-foreground hover:bg-muted"
+                    onClick={() => handleResolve(idx)}
+                    disabled={resolvedIds.includes(idx.toString())}
+                  >
+                    {resolvedIds.includes(idx.toString()) ? "Resolved" : "Resolve"}
+                  </Button>
                 </div>
               </div>
             ))}

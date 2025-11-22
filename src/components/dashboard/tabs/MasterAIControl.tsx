@@ -1,7 +1,42 @@
+import { useState } from "react";
 import { Settings, Activity, Lock, Zap, Download, AlertCircle } from "lucide-react";
 import networkGlobe from "@/assets/network-globe.png";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const MasterAIControl = () => {
+  const { toast } = useToast();
+  const [calibrating, setCalibrating] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [deploying, setDeploying] = useState(false);
+
+  const handleRecalibrate = () => {
+    setCalibrating(true);
+    toast({
+      title: "Recalibrating Global AI",
+      description: "Initiating global AI recalibration across all nodes...",
+    });
+    setTimeout(() => setCalibrating(false), 4000);
+  };
+
+  const handleSyncNodes = () => {
+    setSyncing(true);
+    toast({
+      title: "Syncing All Nodes",
+      description: "Synchronizing all nodes with master AI control...",
+    });
+    setTimeout(() => setSyncing(false), 3000);
+  };
+
+  const handleDeploy = () => {
+    setDeploying(true);
+    toast({
+      title: "Deploying Update",
+      description: "Deploying AI model update to global network...",
+    });
+    setTimeout(() => setDeploying(false), 5000);
+  };
+
   const modules = [
     { name: "Blometric Control", status: "Active", sync: "Synced", confidence: "99.99 %" },
     { name: "Verification Hub", status: "Stable", sync: "Verified", confidence: "99.97 %" },
@@ -192,22 +227,33 @@ const MasterAIControl = () => {
       </div>
 
       {/* Control Buttons */}
-      <div className="flex gap-4">
-        {[
-          { icon: Activity, text: "RUN GLOBAL SYNC" },
-          { icon: Lock, text: "LOCK ALL PROOFS" },
-          { icon: Settings, text: "TRIGBER AI DIAGNOSTIC" },
-          { icon: Zap, text: "TRIGGER AI DIGGNOSTIC" },
-          { icon: Download, text: "EXPORT FULL SYSTEM" },
-        ].map((button, idx) => {
-          const Icon = button.icon;
-          return (
-            <button key={idx} className="flex-1 px-6 py-4 bg-muted hover:bg-muted/80 border border-border rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-3">
-              <Icon className="w-5 h-5 text-primary" />
-              {button.text}
-            </button>
-          );
-        })}
+      <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-3 gap-4">
+          <Button 
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6"
+            onClick={handleRecalibrate}
+            disabled={calibrating}
+          >
+            <Activity className="w-5 h-5 mr-2" />
+            {calibrating ? "RECALIBRATING..." : "RECALIBRATE GLOBAL AI"}
+          </Button>
+          <Button 
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6"
+            onClick={handleSyncNodes}
+            disabled={syncing}
+          >
+            <Lock className="w-5 h-5 mr-2" />
+            {syncing ? "SYNCING..." : "SYNC ALL NODES"}
+          </Button>
+          <Button 
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6"
+            onClick={handleDeploy}
+            disabled={deploying}
+          >
+            <Zap className="w-5 h-5 mr-2" />
+            {deploying ? "DEPLOYING..." : "DEPLOY UPDATE"}
+          </Button>
+        </div>
       </div>
     </div>
   );

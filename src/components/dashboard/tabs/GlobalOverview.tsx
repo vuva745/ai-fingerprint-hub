@@ -1,7 +1,30 @@
+import { useState } from "react";
 import { CheckCircle, FileText, Link, Menu } from "lucide-react";
 import networkGlobe from "@/assets/network-globe.png";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 const GlobalOverview = () => {
+  const { toast } = useToast();
+  const [command, setCommand] = useState("");
+
+  const handleExecuteCommand = () => {
+    if (!command.trim()) {
+      toast({
+        title: "Invalid Command",
+        description: "Please enter a command to execute.",
+        variant: "destructive",
+      });
+      return;
+    }
+    toast({
+      title: "Command Executed",
+      description: `Executing: ${command}`,
+    });
+    setCommand("");
+  };
+
   const regionalNodes = [
     { id: "JKIA Airport", status: "Active", latency: "0.79 s" },
     { id: "Mombasa Hub", latency: "0.79 s" },
@@ -158,6 +181,22 @@ const GlobalOverview = () => {
               <div className="mt-4 bg-background rounded-lg p-3 border border-border">
                 <div className="text-xs font-mono text-muted-foreground mb-2">Node #09 synced new proof batch – 03:41 PM</div>
                 <div className="text-xs font-mono text-muted-foreground">AI Neural Core recalibrated latency –2.3%</div>
+              </div>
+
+              <div className="mt-4 flex gap-2">
+                <Input 
+                  placeholder="Enter AI command..." 
+                  className="flex-1 bg-background border-border"
+                  value={command}
+                  onChange={(e) => setCommand(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleExecuteCommand()}
+                />
+                <Button 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={handleExecuteCommand}
+                >
+                  Execute
+                </Button>
               </div>
             </div>
           </div>

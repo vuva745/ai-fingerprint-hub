@@ -1,7 +1,29 @@
+import { useState } from "react";
 import { CreditCard, CheckCircle, Clock, DollarSign } from "lucide-react";
 import fingerprintGold from "@/assets/fingerprint-gold.png";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const Finger2Pay = () => {
+  const { toast } = useToast();
+  const [authorized, setAuthorized] = useState(false);
+
+  const handleAuthorize = () => {
+    setAuthorized(true);
+    toast({
+      title: "Payment Authorized",
+      description: "Transaction of $450.00 approved and logged to blockchain.",
+    });
+  };
+
+  const handleBlock = () => {
+    toast({
+      title: "Transaction Blocked",
+      description: "Payment authorization rejected and flagged for security review.",
+      variant: "destructive",
+    });
+  };
+
   const transactions = [
     { id: "TX-89234", amount: 450.00, merchant: "Apple Store Dubai", time: "2 min ago", status: "completed" },
     { id: "TX-89233", amount: 125.50, merchant: "Starbucks JKIA", time: "15 min ago", status: "completed" },
@@ -76,6 +98,24 @@ const Finger2Pay = () => {
               <div className="text-sm font-semibold text-success">Verified</div>
               <div className="text-xs text-muted-foreground">Match: 99.7%</div>
             </div>
+          </div>
+
+          <div className="flex gap-4">
+            <Button 
+              className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+              onClick={handleAuthorize}
+              disabled={authorized}
+            >
+              {authorized ? "AUTHORIZED" : "AUTHORIZE PAYMENT"}
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex-1 border-destructive text-destructive hover:bg-destructive/10"
+              onClick={handleBlock}
+              disabled={authorized}
+            >
+              BLOCK TRANSACTION
+            </Button>
           </div>
         </div>
 

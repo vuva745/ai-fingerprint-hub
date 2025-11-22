@@ -1,7 +1,28 @@
+import { useState } from "react";
 import fingerprintGold from "@/assets/fingerprint-gold.png";
 import { CheckCircle, Circle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const AIMatchAnalyzer = () => {
+  const { toast } = useToast();
+  const [verified, setVerified] = useState(false);
+
+  const handleVerify = () => {
+    setVerified(true);
+    toast({
+      title: "Fingerprint Verified",
+      description: "Match confidence: 97.8% - Identity confirmed and logged to blockchain.",
+    });
+  };
+
+  const handleReject = () => {
+    toast({
+      title: "Verification Rejected",
+      description: "Match rejected and incident logged for security review.",
+      variant: "destructive",
+    });
+  };
+
   return (
     <div className="min-h-screen p-8 space-y-6">
       {/* Header */}

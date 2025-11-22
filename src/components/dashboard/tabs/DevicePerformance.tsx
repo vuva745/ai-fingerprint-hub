@@ -1,6 +1,28 @@
+import { useState } from "react";
 import { Activity, Cpu, HardDrive, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const DevicePerformance = () => {
+  const { toast } = useToast();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    toast({
+      title: "Refreshing Stats",
+      description: "Device performance data is being updated...",
+    });
+    setTimeout(() => setRefreshing(false), 2000);
+  };
+
+  const handleViewDetails = (deviceId: string) => {
+    toast({
+      title: "Device Details",
+      description: `Viewing detailed metrics for ${deviceId}`,
+    });
+  };
+
   const devices = [
     { id: "TAB-AX12", status: "Active", load: 23, scans: 4231, accuracy: 99.1 },
     { id: "TAB-BX09", status: "Active", load: 45, scans: 3892, accuracy: 98.7 },
@@ -39,7 +61,16 @@ const DevicePerformance = () => {
 
       {/* Device List */}
       <div className="bg-card border border-border rounded-2xl p-6">
-        <h2 className="text-2xl font-bold text-primary mb-6">Connected Devices</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-primary">Connected Devices</h2>
+          <Button 
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            onClick={handleRefresh}
+            disabled={refreshing}
+          >
+            {refreshing ? "Refreshing..." : "Refresh Stats"}
+          </Button>
+        </div>
         
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -50,6 +81,7 @@ const DevicePerformance = () => {
                 <th className="text-left py-4 px-4 text-sm font-semibold text-muted-foreground">CPU Load</th>
                 <th className="text-left py-4 px-4 text-sm font-semibold text-muted-foreground">Total Scans</th>
                 <th className="text-left py-4 px-4 text-sm font-semibold text-muted-foreground">Accuracy</th>
+                <th className="text-left py-4 px-4 text-sm font-semibold text-muted-foreground">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -83,6 +115,15 @@ const DevicePerformance = () => {
                   <td className="py-4 px-4 text-foreground font-semibold">{device.scans.toLocaleString()}</td>
                   <td className="py-4 px-4">
                     <span className="text-success font-semibold">{device.accuracy}%</span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <Button 
+                      variant="outline" 
+                      className="text-xs border-primary text-primary hover:bg-primary/10"
+                      onClick={() => handleViewDetails(device.id)}
+                    >
+                      View Details
+                    </Button>
                   </td>
                 </tr>
               ))}

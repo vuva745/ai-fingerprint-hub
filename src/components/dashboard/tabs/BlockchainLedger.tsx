@@ -1,7 +1,19 @@
+import { useState } from "react";
 import { CheckCircle, ExternalLink, Download, Search, FileText } from "lucide-react";
 import blockchainFlow from "@/assets/blockchain-flow.png";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const BlockchainLedger = () => {
+  const { toast } = useToast();
+
+  const handleViewDetails = (block: string, hash: string) => {
+    toast({
+      title: "Block Details",
+      description: `Viewing details for Block ${block} - Hash: ${hash.substring(0, 16)}...`,
+    });
+  };
+
   const ledgerEntries = [
     { ledger: "#1504", node: "JKIA #07", hash: "0xA91F...", timestamp: "16:11:44", status: "Locked" },
     { ledger: "#1505", node: "Dubai #09", hash: "0xC8B3...", timestamp: "16:12:52", status: "Synced" },
@@ -147,6 +159,7 @@ const BlockchainLedger = () => {
                       <th className="text-left py-3 px-3 text-sm font-semibold text-muted-foreground">Proof Hash</th>
                       <th className="text-left py-3 px-3 text-sm font-semibold text-muted-foreground">TImestamp</th>
                       <th className="text-left py-3 px-3 text-sm font-semibold text-muted-foreground">Status</th>
+                      <th className="text-left py-3 px-3 text-sm font-semibold text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -168,6 +181,15 @@ const BlockchainLedger = () => {
                           }`}>
                             {entry.status}
                           </span>
+                        </td>
+                        <td className="py-4 px-3">
+                          <Button 
+                            variant="outline" 
+                            className="text-xs border-primary text-primary hover:bg-primary/10"
+                            onClick={() => handleViewDetails(entry.ledger, entry.hash)}
+                          >
+                            View Details
+                          </Button>
                         </td>
                       </tr>
                     ))}

@@ -1,7 +1,29 @@
+import { useState } from "react";
 import { Server, CheckCircle, AlertTriangle, Activity } from "lucide-react";
 import networkGlobe from "@/assets/network-globe.png";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const LocalNodeDashboard = () => {
+  const { toast } = useToast();
+  const [syncing, setSyncing] = useState(false);
+
+  const handleViewReport = () => {
+    toast({
+      title: "Full Report",
+      description: "Opening detailed local node analytics report...",
+    });
+  };
+
+  const handleSync = () => {
+    setSyncing(true);
+    toast({
+      title: "Syncing Data",
+      description: "Local node is synchronizing with global network...",
+    });
+    setTimeout(() => setSyncing(false), 3000);
+  };
+
   return (
     <div className="min-h-screen p-8 space-y-6">
       {/* Header */}
@@ -112,13 +134,20 @@ const LocalNodeDashboard = () => {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-4">
-              <button className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
-                <span>Flag Incident</span>
-              </button>
-              <button className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
-                <Activity className="w-4 h-4" />
-                <span>Sync Proof</span>
-              </button>
+              <Button 
+                className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={handleViewReport}
+              >
+                View Full Report
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex-1 border-primary text-primary hover:bg-primary/10"
+                onClick={handleSync}
+                disabled={syncing}
+              >
+                {syncing ? "Syncing..." : "Sync Data"}
+              </Button>
             </div>
           </div>
 

@@ -1,8 +1,28 @@
+import { useState } from "react";
 import fingerprintGold from "@/assets/fingerprint-gold.png";
 import { CheckCircle, Circle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const EnrollmentCenter = () => {
+  const { toast } = useToast();
+  const [enrolled, setEnrolled] = useState(false);
+
+  const handleEnroll = () => {
+    setEnrolled(true);
+    toast({
+      title: "Enrollment Successful",
+      description: "Fingerprint enrolled and stored on blockchain with 98% confidence.",
+    });
+  };
+
+  const handleValidate = () => {
+    toast({
+      title: "Validation Complete",
+      description: "Liveness check passed. Fingerprint template validated successfully.",
+    });
+  };
+
   return (
     <div className="min-h-screen p-8 space-y-6">
       {/* Header */}
@@ -100,10 +120,18 @@ const EnrollmentCenter = () => {
             <div className="bg-background border-2 border-success rounded-lg p-4">
               <div className="text-xl font-bold text-foreground mb-2">FINGERPRINT MATCH CONFIRMED</div>
               <div className="flex gap-4 mt-4">
-                <Button className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
-                  ENROLL
+                <Button 
+                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  onClick={handleEnroll}
+                  disabled={enrolled}
+                >
+                  {enrolled ? "ENROLLED" : "ENROLL"}
                 </Button>
-                <Button variant="outline" className="flex-1 border-primary text-primary hover:bg-primary/10">
+                <Button 
+                  variant="outline" 
+                  className="flex-1 border-primary text-primary hover:bg-primary/10"
+                  onClick={handleValidate}
+                >
                   VALIDATE
                 </Button>
               </div>
